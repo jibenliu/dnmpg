@@ -55,7 +55,7 @@ RUN yum install -y bzip2-devel \
     && cd php-7.3.1 \
     && ./configure  --prefix=/usr/local/php \
         --with-config-file-path=/etc/local/etc/php \
-        --with-config-file-scan-dir=/usr/local/etc/php-fpm.d \
+        --with-config-file-scan-dir=/usr/local/etc/php/conf.d \
         --with-mysqli=mysqlnd  \
         --with-pdo-mysql=mysqlnd \
         --with-mysql-sock=/tmp/mysql.sock \
@@ -108,16 +108,16 @@ RUN yum install -y bzip2-devel \
 	&& rm -f swoole-4.2.12 \
 	&& rm -f redis-4.2.0.tgz \
 	&& rm -f mongodb-1.5.3.tgz \
-	&& mkdir /etc/php7{,.d} \
-	&& cd php-7.3.1 && cp php.ini-production  /etc/php7/php.ini \
+	&& mkdir /etc/php \
+	&& cp php.ini-production  /etc/php/php.ini \
 	&& cp sapi/fpm/init.d.php-fpm  /etc/rc.d/init.d/php-fpm && chmod +x /etc/rc.d/init.d/php-fpm && chkconfig --add php-fpm \
-	&& sed -i '/post_max_size/s/8/16/g;/max_execution_time/s/30/300/g;/max_input_time/s/60/300/g;s#\;date.timezone.*#date.timezone \= Asia/Shanghai#g' /etc/php7/php.ini \
-	&& cp /usr/local/php7/etc/php-fpm.conf.default /usr/local/php7/etc/php-fpm.conf \
-	&& cp /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf \
-	&& sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php7/etc/php-fpm.d/www.conf
+	&& sed -i '/post_max_size/s/8/16/g;/max_execution_time/s/30/300/g;/max_input_time/s/60/300/g;s#\;date.timezone.*#date.timezone \= Asia/Shanghai#g' /etc/php/php.ini \
+	&& cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf \
+	&& cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf \
+	&& sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php/etc/php-fpm.d/www.conf
 
 #EXPOSE
 EXPOSE 9000
 #Start php-fpm
-ENTRYPOINT ["/usr/local/php7/sbin/php-fpm", "-F", "-c", "/etc/php7/php.ini"]
+ENTRYPOINT ["/usr/local/php7/sbin/php-fpm", "-F", "-c", "/etc/php/php.ini"]
 WORKDIR /var/www/html
