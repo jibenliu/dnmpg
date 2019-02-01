@@ -84,7 +84,7 @@ services:
             - "27017:27017"
         volumes:
             - ./mongodb/data:/data
-            - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf.orig
+            # - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf.orig
             - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
         environment: 
             MONGO_INITDB_ROOT_USERNAME: admin
