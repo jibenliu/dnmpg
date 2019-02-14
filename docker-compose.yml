@@ -4,7 +4,7 @@ services:
         image: mysql:8.0
         container_name: mysql
         ports:
-            - "33060:3306"
+            - "3306:3306"
         volumes:
             - ./mysql/data:/var/lib/mysql
             - ./mysql/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf:ro
@@ -28,7 +28,7 @@ services:
         volumes:
             - ./php/etc:/usr/local/etc/php
             - ./log/php:/var/log
-            - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:rw
+            - ./php/php-fpm.conf:/usr/local/etc/php/php-fpm.conf:rw
             - ./www:/etc/nginx/html
         depends_on:
             - mysql

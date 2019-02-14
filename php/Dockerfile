@@ -38,17 +38,14 @@ RUN yum install -y bzip2-devel \
 	&& cd .. && rm cmake-3.13.3.tar.gz \
 	&& wget https://libzip.org/download/libzip-1.5.1.tar.gz \
 	&& tar -zxvf libzip-1.5.1.tar.gz \
-	&& cd libzip-1.5.1 \
-	&& mkdir build && cd build && cmake .. && make && make install \
+	&& cd libzip-1.5.1 && mkdir build && cd build && cmake .. && make && make install \
 	&& cd ../.. && rm libzip-1.5.1.tar.gz \
 	&& wget http://iweb.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz \
 	&& tar xf libmcrypt-2.5.8.tar.gz \
-    && cd libmcrypt-2.5.8 \
-	&& ./configure && make && make install \
+    && cd libmcrypt-2.5.8 && ./configure && make && make install \
 	&& cd .. && rm libmcrypt-2.5.8.tar.gz \
 	&& echo -e '/usr/local/lib64 \n /usr/local/lib\n /usr/lib\n /usr/lib64'>>/etc/ld.so.conf && ldconfig -v \
-	&& mkdir -p /usr/local/nginx/html \
-	&& cd /usr/local/nginx/html \
+	&& mkdir -p /usr/local/nginx/html && cd /usr/local/nginx/html \
 	&& wget http://php.net/distributions/php-7.3.1.tar.gz \
 	&& tar xf php-7.3.1.tar.gz \
 	&& useradd -r -s /sbin/nologin php-fpm \
@@ -102,22 +99,19 @@ RUN yum install -y bzip2-devel \
         --with-fpm-user=php-fpm \
         --with-fpm-group=php-fpm && make -j 2  && make -j 2 install \
     && export PATH=/usr/local/php/bin/:$PATH && source /etc/profile \
+    && mkdir -p /usr/local/etc/php/conf.d/  /usr/local/etc/php/php-fpm.d/ \
     && wget http://pecl.php.net/get/swoole-4.2.12.tgz  && pecl install swoole-4.2.12.tgz && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \
 	&& wget http://pecl.php.net/get/redis-4.2.0.tgz && pecl install redis-4.2.0.tgz  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
 	&& wget http://pecl.php.net/get/mongodb-1.5.3.tgz && pecl install mongodb-1.5.3.tgz  && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
-	&& rm -f swoole-4.2.12 \
-	&& rm -f redis-4.2.0.tgz \
-	&& rm -f mongodb-1.5.3.tgz \
-	&& mkdir /etc/php \
-	&& cp php.ini-production  /etc/php/php.ini \
+	&& rm -f swoole-4.2.12 redis-4.2.0.tgz mongodb-1.5.3.tgz \
+	&& mkdir -p /etc/local/etc/php \
+	&& cp php.ini-development  /etc/local/etc/php/php.ini \
 	&& cp sapi/fpm/init.d.php-fpm  /etc/rc.d/init.d/php-fpm && chmod +x /etc/rc.d/init.d/php-fpm && chkconfig --add php-fpm \
-	&& sed -i '/post_max_size/s/8/16/g;/max_execution_time/s/30/300/g;/max_input_time/s/60/300/g;s#\;date.timezone.*#date.timezone \= Asia/Shanghai#g' /etc/php/php.ini \
-	&& cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf \
-	&& cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf \
-	&& sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php/etc/php-fpm.d/www.conf
+	&& sed -i '/post_max_size/s/8/16/g;/max_execution_time/s/30/300/g;/max_input_time/s/60/300/g;s#\;date.timezone.*#date.timezone \= Asia/Shanghai#g' /etc/local/etc/php/php.ini \
+	&& sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/etc/php/php-fpm.d/www.conf
 
 #EXPOSE
 EXPOSE 9000
 #Start php-fpm
-ENTRYPOINT ["/usr/local/php7/sbin/php-fpm", "-F", "-c", "/etc/php/php.ini"]
+ENTRYPOINT ["/usr/local/php/sbin/php-fpm", "-F", "-c", "/etc/local/etc/php/php.ini"]
 WORKDIR /var/www/html

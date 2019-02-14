@@ -1,8 +1,15 @@
 <?php
-	// $conn = mysqli_connect('mysql','root','123456');
-	// if (!$con)
- //  	{
- //  		die('Could not connect: ' . mysqli_error());
- //  	}
-	phpinfo();
+$servername = "127.0.0.1:33060"; 
+$username = "root"; 
+$password = "123456"; 
+
+// try { 
+    $conn = new PDO("mysql:host=$servername;dbname=app_store", $username, $password); 
+    // echo "Connected successfully"; 
+    // } 
+// catch(PDOException $e) 
+//     { 
+//     echo $e->getMessage(); 
+//     } 
+// 	phpinfo();
 	
