@@ -3,13 +3,12 @@ $servername = "mysql";
 $username = "root"; 
 $password = "123456"; 
 
-// try { 
+try { 
     $conn = new PDO("mysql:host=$servername;dbname=app_store", $username, $password); 
-    // echo "Connected successfully"; 
-    // } 
-// catch(PDOException $e) 
-//     { 
-//     echo $e->getMessage(); 
-//     } 
-// 	phpinfo();
+    echo "Connected successfully"; 
+    } 
+catch(PDOException $e) 
+    { 
+    echo $e->getMessage(); 
+    } 
 	

@@ -1,8 +1,6 @@
 FROM centos
 
-MAINTAINER helony  
-
-RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-devel bison-devel libaio-devel openldap  openldap-devel autoconf bison libxml2-devel libcurl-devel libevent libevent-devel gd-devel  expat-devel
+MAINTAINER helony
 
 #ADD http://cn.php.net/distributions/php-7.3.1.tar.gz . 
 #ADD https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz . 
@@ -13,7 +11,8 @@ RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-de
 
 COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz libzip-1.5.1.tar.gz ./
 
-RUN mkdir -p /usr/local/nginx/html \
+RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-devel bison-devel libaio-devel openldap  openldap-devel autoconf bison libxml2-devel libcurl-devel libevent libevent-devel gd-devel  expat-devel \
+    && mkdir -p /usr/local/nginx/html \
     && useradd -r -s /sbin/nologin php-fpm \
     && tar xf php-7.3.1.tar.gz \
     && tar -zxvf cmake-3.13.3.tar.gz \
