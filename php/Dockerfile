@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:latest
 
 #ADD http://cn.php.net/distributions/php-7.3.1.tar.gz . 
 #ADD https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz . 
@@ -7,23 +7,23 @@ FROM centos
 #ADD http://pecl.php.net/get/redis-4.2.0.tgz . 
 #ADD http://pecl.php.net/get/mongodb-1.5.3.tgz . 
 
-COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz libzip-1.5.1.tar.gz ./
+COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz libzip-1.5.1.tar.gz /
 
-RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-devel bison-devel libaio-devel openldap  openldap-devel autoconf bison libxml2-devel libcurl-devel libevent libevent-devel gd-devel  expat-devel \
+RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-devel bison-devel libaio-devel openldap  openldap-devel autoconf bison libxml2-devel libcurl-devel libevent libevent-devel gd-devel  expat-devel \
     && mkdir -p /usr/local/nginx/html \
     && useradd -r -s /sbin/nologin php-fpm \
-    && tar xf php-7.3.1.tar.gz \
     && tar -zxvf cmake-3.13.3.tar.gz \
     && cd cmake-3.13.3 \
-    && ./configure && make && make install \
-    && cd .. && rm cmake-3.13.3.tar.gz \
+    && ./configure && make && make install && make clean \
+    && cd / && rm cmake-3.13.3.tar.gz \
     && tar -zxvf libzip-1.5.1.tar.gz \
-    && cd libzip-1.5.1 && mkdir build && cd build && cmake .. && make && make install \
-    && cd ../.. && rm libzip-1.5.1.tar.gz \
+    && cd libzip-1.5.1 && mkdir build && cd build && cmake .. && make && make install && make clean \
+    && cd / && rm libzip-1.5.1.tar.gz \
     && tar xf libmcrypt-2.5.8.tar.gz \
-    && cd libmcrypt-2.5.8 && ./configure && make && make install \
-    && cd .. && rm libmcrypt-2.5.8.tar.gz \
+    && cd libmcrypt-2.5.8 && ./configure && make && make install && make clean \
+    && cd / && rm libmcrypt-2.5.8.tar.gz \
     && echo -e '/usr/local/lib64 \n /usr/local/lib\n /usr/lib\n /usr/lib64'>>/etc/ld.so.conf && ldconfig -v \
+    && tar xf php-7.3.1.tar.gz \
     && cd php-7.3.1 \
     && ./configure  --prefix=/usr/local/php7 \
         --with-config-file-path=/etc/php7 \
@@ -65,7 +65,7 @@ RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-de
         --enable-maintainer-zts  \
         --enable-session \
         --with-fpm-user=php-fpm \
-        --with-fpm-group=php-fpm  && make -j 2  && make -j 2 install \
+        --with-fpm-group=php-fpm  && make -j 2  && make -j 2 install && make clean \
     && export PATH=/usr/local/php7/bin:$PATH && source /etc/profile \
     && mkdir /etc/php7{,.d} \
     && cp php.ini-production  /etc/php7/php.ini \
@@ -73,10 +73,10 @@ RUN yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-de
     && sed -i '/post_max_size/s/8/16/g;/max_execution_time/s/30/300/g;/max_input_time/s/60/300/g;s#\;date.timezone.*#date.timezone \= Asia/Shanghai#g' /etc/php7/php.ini \
     && export PATH=/usr/local/php7/bin/:$PATH && source /etc/profile \
     && cp /usr/local/php7/etc/php-fpm.conf.default /usr/local/php7/etc/php-fpm.conf \
-	&& cd ..  && pecl install swoole-4.2.12.tgz && echo "extension=swoole.so" > /etc/php7.d/swoole.ini \
+	&& cd /  && pecl install swoole-4.2.12.tgz && echo "extension=swoole.so" > /etc/php7.d/swoole.ini \
 	&& pecl install redis-4.2.0.tgz  && echo "extension=redis.so" > /etc/php7.d/redis.ini \
 	&& pecl install mongodb-1.5.3.tgz  && echo "extension=mongodb.so" > /etc/php7.d/mongodb.ini \
-	&& rm -f swoole-4.2.12 redis-4.2.0.tgz mongodb-1.5.3.tgz \
+	&& cd / && rm -f swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz  php-7.3.1.tar.gz \
     && cp /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf \
     && sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php7/etc/php-fpm.d/www.conf
 
