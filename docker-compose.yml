@@ -26,9 +26,9 @@ services:
             context: ./php
         container_name: php-fpm
         volumes:
-            - ./php/etc:/usr/local/etc/php
+            - ./php/etc:/etc/php7/
             - ./log/php:/var/log
-            - ./php/php-fpm.conf:/usr/local/etc/php/php-fpm.conf:rw
+            - ./php/php-fpm.conf:/usr/local/php7/etc/php-fpm.conf:rw
             - ./www:/etc/nginx/html
         depends_on:
             - mysql
