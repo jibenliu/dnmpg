@@ -44,7 +44,6 @@ RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc g
         --with-mhash  \
         --with-xmlrpc \
         --with-pdo-mysql \
-        --with-libmbfl \
         --with-onig \
         --with-pear \
         --enable-xml \
