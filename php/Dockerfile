@@ -6,8 +6,9 @@ FROM centos:latest
 #ADD http://pecl.php.net/get/swoole-4.2.12.tgz . 
 #ADD http://pecl.php.net/get/redis-4.2.0.tgz . 
 #ADD http://pecl.php.net/get/mongodb-1.5.3.tgz . 
+#ADD http://pecl.php.net/get/pthreads-3.1.6.tgz .
 
-COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz libzip-1.5.1.tar.gz /
+COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz libzip-1.5.1.tar.gz pthreads-3.1.6.tgz /
 
 RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc gcc-c++ ncurses-devel bison-devel libaio-devel openldap  openldap-devel autoconf bison libxml2-devel libcurl-devel libevent libevent-devel gd-devel  expat-devel \
     && mkdir -p /usr/local/nginx/html \
@@ -75,7 +76,8 @@ RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc g
     && cp /usr/local/php7/etc/php-fpm.conf.default /usr/local/php7/etc/php-fpm.conf \
 	&& cd /  && pecl install swoole-4.2.12.tgz && echo "extension=swoole.so" > /etc/php7.d/swoole.ini \
 	&& pecl install redis-4.2.0.tgz  && echo "extension=redis.so" > /etc/php7.d/redis.ini \
-	&& pecl install mongodb-1.5.3.tgz  && echo "extension=mongodb.so" > /etc/php7.d/mongodb.ini \
+    && pecl install mongodb-1.5.3.tgz  && echo "extension=mongodb.so" > /etc/php7.d/mongodb.ini \
+	&& pecl install pthreads-3.1.6.tgz  && echo "extension=pthread.so" > /etc/php7.d/pthread.ini \
 	&& cd / && rm -f swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz  php-7.3.1.tar.gz \
     && cp /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf \
     && sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php7/etc/php-fpm.d/www.conf
