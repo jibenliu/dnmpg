@@ -1,6 +1,6 @@
 FROM  php:5.6-fpm
 
-COPY redis-4.3.0.tgz mongodb-1.5.3.tgz /
+COPY redis-4.3.0.tgz mongodb-1.5.4.tgz /
 
 RUN apt-get update && apt-get install -y \
  libfreetype6-dev \
