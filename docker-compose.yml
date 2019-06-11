@@ -23,8 +23,8 @@ services:
             
     php-fpm:
         build:
-            #context: ./php-latest
-            context: ./php5.6
+            context: ./php-latest
+            #context: ./php5.6
         container_name: php-fpm
         volumes:
             - ./php-latest/etc:/etc/php7/

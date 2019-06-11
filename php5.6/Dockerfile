@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
  libpng12*-dev \
  && apt-get update -y \
  && docker-php-ext-install pdo_mysql \
- && pecl install redis \
- && pecl install mongodb \
+ && pecl install redis-4.3.0.tgz \
+ && pecl install mongodb-1.5.4.tgz \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
  && docker-php-ext-install gd \
