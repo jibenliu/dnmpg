@@ -77,7 +77,11 @@ RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc g
     && pecl install mongodb-1.5.4.tgz  && echo "extension=mongodb.so" > /etc/php7.d/mongodb.ini \
 	&& cd / && rm -f swoole-4.2.12.tgz redis-4.2.0.tgz mongodb-1.5.3.tgz  php-7.3.1.tar.gz \
     && cp /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf \
-    && sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php7/etc/php-fpm.d/www.conf
+    && sed -i -e 's/listen = 127.0.0.1:9000/listen = 9000/' /usr/local/php7/etc/php-fpm.d/www.conf \
+	&& cp /usr/local/php7/bin/php /usr/bin/php \
+	&& php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
+	&& php composer-setup.php \
+	&& php -r "unlink('composer-setup.php');" \
 
 EXPOSE 9000
 

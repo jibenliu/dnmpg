@@ -22,6 +22,7 @@ services:
         tty: true
         restart: always
         privileged: true
+        user: mysql
         networks:
             - app_net
             
@@ -46,6 +47,10 @@ services:
             - redis
             - mongodb
         tty: true
+        user：php
+        cpu_shares: 128
+        #限定php使用内存大小
+        mem_limit: 256m
         restart: always
         privileged: true
         #申明自定义网络 php-fpm
@@ -70,6 +75,7 @@ services:
             - php-fpm
         tty: true
         restart: always
+        user: nginx
         privileged: true            
         networks:
             - app_net
@@ -84,6 +90,7 @@ services:
             - ./log/redis/redis.log:/var/log/redis/redis.log:rw
         tty: true
         restart: always
+        user: redis
         privileged: true
         networks:
             - app_net 
@@ -102,6 +109,7 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: 123456
         tty: true
         restart: always
+        user: mongodb
         privileged: true
         networks:
             - app_net 
