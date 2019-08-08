@@ -1,5 +1,6 @@
 FROM centos:latest
 
+USER php
 #ADD http://cn.php.net/distributions/php-7.3.1.tar.gz . 
 #ADD https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz . 
 #ADD http://iweb.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz . 
