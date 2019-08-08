@@ -81,6 +81,7 @@ RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc g
 	&& cp /usr/local/php7/bin/php /usr/bin/php \
 	&& php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
+	&& mv composer.phar /usr/bin/composer \
 	&& php -r "unlink('composer-setup.php');" \
 
 EXPOSE 9000
