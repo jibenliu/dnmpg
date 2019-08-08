@@ -1,4 +1,12 @@
 <?php
+
+$str = 'token TGZsd_FrZRHdgtNLYMMJkCuvD98E5oRk';
+$pattern ='/^token\s(.*)/';
+if (preg_match($this->pattern, $authHeader, $matches)) {
+	$authHeader = $matches[1];
+	var_dump($authHeader);
+}
+exit;
 // $servername = "mysql"; 
 // $username = "root"; 
 // $password = "123456"; 

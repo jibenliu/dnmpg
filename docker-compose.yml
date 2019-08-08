@@ -47,7 +47,7 @@ services:
             - redis
             - mongodb
         tty: true
-        user：php
+        user: php
         cpu_shares: 128
         #限定php使用内存大小
         mem_limit: 256m
