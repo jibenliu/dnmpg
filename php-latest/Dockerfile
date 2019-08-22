@@ -83,6 +83,8 @@ RUN yum update -y && yum install -y bzip2-devel openssl-devel gnutls-devel gcc g
 	&& php composer-setup.php \
 	&& mv composer.phar /usr/bin/composer \
 	&& php -r "unlink('composer-setup.php');" \
+	&& chmod 0777 -R /.composer \
+	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com \
 
 EXPOSE 9000
 
