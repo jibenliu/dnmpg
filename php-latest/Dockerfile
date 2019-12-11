@@ -1,10 +1,10 @@
-FROM centos:latest
+FROM centos:centos7
 
-#ADD http://cn.php.net/distributions/php-7.3.1.tar.gz . 
-#ADD https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz . 
-#ADD http://iweb.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz . 
-#ADD http://pecl.php.net/get/swoole-4.2.12.tgz . 
-#ADD http://pecl.php.net/get/redis-4.2.0.tgz . 
+#ADD http://cn.php.net/distributions/php-7.3.1.tar.gz .
+#ADD https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz .
+#ADD http://iweb.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz .
+#ADD http://pecl.php.net/get/swoole-4.2.12.tgz .
+#ADD http://pecl.php.net/get/redis-4.2.0.tgz .
 #ADD http://pecl.php.net/get/mongodb-1.5.3.tgz .
 
 COPY php-7.3.1.tar.gz cmake-3.13.3.tar.gz libmcrypt-2.5.8.tar.gz swoole-4.2.12.tgz redis-4.3.0.tgz mongodb-1.5.4.tgz libzip-1.5.1.tar.gz /
