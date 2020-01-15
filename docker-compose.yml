@@ -100,7 +100,7 @@ services:
     restart: always
     user: mongodb
     networks:
-      - app_net
+      - lnmp-networks
   rabbitmq:
     image: rabbitmq:management-alpine
     container_name: rabbitmq
@@ -123,6 +123,6 @@ services:
     restart: always
     user: rabbitmq
     networks:
-      - app_net
+      - lnmp-networks
 networks:
   lnmp-networks:
