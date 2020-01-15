@@ -8,7 +8,7 @@ services:
     restart: always
     tty: true
     volumes:
-      - ./www:/usr/share/nginx/html
+      - ./www:/var/www/html
       - ./logs/nginx:/var/log/nginx
       - ./nginx/conf:/etc/nginx
       - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
