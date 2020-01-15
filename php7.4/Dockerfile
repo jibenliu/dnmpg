@@ -7,9 +7,7 @@ RUN date -R
 
 WORKDIR /var/www/html
 RUN apt-get update --fix-missing && apt-get install -y  libpng-dev libjpeg-dev libfreetype6-dev  libxpm-dev libvpx-dev  libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev \
-    && docker-php-ext-install bcmath gd mysqli intl opcache pdo_mysql gd zip curl opcache xml json mbstring sockets exif \
-	&& docker-php-ext-configure zip \
-    && docker-php-ext-configure gd 
+    && docker-php-ext-install bcmath gd mysqli intl opcache pdo_mysql gd zip curl opcache xml json mbstring sockets exif 
 
 
 RUN pecl channel-update pecl.php.net \
