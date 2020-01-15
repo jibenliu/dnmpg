@@ -1,122 +1,128 @@
-version: '2'
+version: '3.3'
 services:
-    mysql:
-        image: mysql:8.0
-        container_name: mysql
-        ports:
-            - "3306:3306"
-        volumes:
-            - ./mysql/data:/var/lib/mysql
-            - ./mysql/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf:rw
-            - ./mysql/conf/:/etc/mysql/conf.d/
-            - ./log/mysql:/var/log/mysql:rw
-        environment:
-            - MYSQL_ROOT_PASSWORD=123456
-        command:
-            --default-authentication-plugin=mysql_native_password
-            --character-set-server=utf8mb4
-            --collation-server=utf8mb4_general_ci
-            --explicit_defaults_for_timestamp=true
-            --lower_case_table_names=1
-            --max_allowed_packet=128M;
-        tty: true
-        restart: always
-        privileged: true
-        user: mysql
-        networks:
-            - app_net
-            
-    php-fpm:
-        build:
-            #context: ./php-latest
-            context: ./php5.6
-        container_name: php-fpm
-        volumes:
-            - ./php-latest/etc:/etc/php7/
-            - ./log/php:/var/log
-            - ./php-latest/php-fpm.conf:/usr/local/php7/etc/php-fpm.conf:rw
-            - ./www:/etc/nginx/html
-        depends_on:
-            - mysql
-            - redis
-            - mongodb
-        ports:
-            - "9000:9000"
-        links: 
-            - mysql
-            - redis
-            - mongodb
-        tty: true
-        cpu_shares: 128
-        #限定php使用内存大小
-        mem_limit: 256m
-        restart: always
-        privileged: true
-        #申明自定义网络 php-fpm
-        networks:
-            - app_net
-    
-    ######## 相比nginx:latest，nginx:alpine有几点优势：1.用的是最新版nginx镜像，功能与nginx:latest一模一样 2.alpine镜像用的是Alpine Linux内核，3.比ubuntu内核要小很多。4.nginx:alpine默认支持http2 ######     
-    nginx:
-        image: nginx:alpine 
-        container_name: nginx
-        volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
-            - ./log/nginx:/var/log/nginx
-            - ./www:/etc/nginx/html
-        ports:
-            - "80:80"
-            - "443:443"
-        # 依赖php服务，意味着在启动nginx之前先启动php
-        depends_on:
-            - php-fpm
-        links:
-            - php-fpm
-        tty: true
-        restart: always
-        privileged: true            
-        networks:
-            - app_net
-        
-    redis:
-        image: redis:5.0.3
-        ports:
-            - "6379:6379"
-        container_name: redis
-        volumes:
-            - ./redis/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
-            - ./log/redis/redis.log:/var/log/redis/redis.log:rw
-        tty: true
-        restart: always
-        user: redis
-        privileged: true
-        networks:
-            - app_net 
-  
-    mongodb:
-        image: mongo:4.0.5
-        restart: always
-        ports:
-            - "27017:27017"
-        volumes:
-            - ./mongodb/data:/data
-            # - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf.orig
-            - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
-        environment: 
-            MONGO_INITDB_ROOT_USERNAME: admin
-            MONGO_INITDB_ROOT_PASSWORD: 123456
-        tty: true
-        restart: always
-        user: mongodb
-        privileged: true
-        networks:
-            - app_net 
-
+  nginx:
+    image: nginx:1.17 #最新版本
+    container_name: nginx
+    ports:
+      - "80:80" #nginx
+    restart: always
+    tty: true
+    volumes:
+      - ./www:/usr/share/nginx/html
+      - ./logs/nginx:/var/log/nginx
+      - ./nginx/conf:/etc/nginx
+      - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
+    networks:
+      - lnmp-networks
+  php7:
+    build:
+      context: ./php7.4
+    container_name: php7-fpm
+    tty: true
+    restart: always
+    privileged: true
+    volumes:
+      - ./www:/var/www/html
+      - ./logs/php:/var/log/php
+      - ./php7.4:/usr/local/etc
+    depends_on:
+      - nginx
+    ports:
+      - "9000:9000"
+    networks:
+      - lnmp-networks
+  php5:
+    build:
+      context: ./php5.6
+    container_name: php5-fpm
+    tty: true
+    restart: always
+    privileged: true
+    volumes:
+      - ./www:/var/www/html
+      - ./logs/php:/var/log/php
+      - ./php5.6/php.ini:/usr/local/etc/php/php.ini
+      - ./php5.6/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    depends_on:
+      - nginx
+    ports:
+      - "9000:9000"
+    networks:
+      - lnmp-networks
+  redis:
+    image: redis:5.0.7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    tty: true
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf
+      - ./redis/data:/var/lib/redis
+      - ./logs/redis:/var/log/redis
+    networks:
+      - lnmp-networks
+  mysql:
+    build: mysql:8.0
+    container_name: mysql
+    tty: true
+    restart: always
+    ports:
+      - "3306:3306" #mysql
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./logs/mysql:/var/log/mysql
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --max_allowed_packet=128M;
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    networks:
+      - lnmp-networks
+  mongodb:
+    image: mongo:4.2.2
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb/data:/data
+      - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
+      - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    tty: true
+    restart: always
+    user: mongodb
+    networks:
+      - app_net
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq
+    ports:
+      - "15672:15672" #管理界面端口
+      - "5672:5672" #服务端端口
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+      - ./log/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=123456
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    tty: true
+    restart: always
+    user: rabbitmq
+    networks:
+      - app_net
 networks:
-    app_net:
-volumes:
-    mysql:
-    php-fpm:
-    nginx:
-    redis:
-    mongodb:
+  lnmp-networks:
