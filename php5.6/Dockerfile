@@ -13,7 +13,6 @@ RUN apt-get update --fix-missing && apt-get install -y  libpng-dev libjpeg-dev l
 
 
 RUN pecl channel-update pecl.php.net \
-    && pecl install igbinary \
     && pecl install redis \
     && pecl install xdebug \
     && pecl install swoole \
