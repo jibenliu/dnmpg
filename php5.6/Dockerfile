@@ -1,4 +1,4 @@
-FROM  php:5.6-fpm
+FROM  php:5.6-fpm-strech
 
 WORKDIR /var/www/html 
 COPY redis-4.3.0.tgz mongodb-1.5.4.tgz memcache-2.2.4.tgz ./
