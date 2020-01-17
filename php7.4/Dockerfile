@@ -3,8 +3,8 @@ FROM php:7.4-fpm-strech
 MAINTAINER jibenliu jibenliu@126.com
 
 RUN apt-get update --fix-missing \
-	&& apt-get install -y  libpng-dev libjpeg-dev libfreetype6-dev  libxpm-dev libvpx-dev  libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev \
-    && docker-php-ext-install bcmath gd mysqli intl opcache pdo_mysql gd zip curl opcache xml json mbstring sockets exif \
+	&& apt-get install -y  libpng-dev libjpeg-dev libfreetype6-dev libxpm-dev libvpx-dev libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev \
+    && docker-php-ext-install bcmath gd mysqli intl opcache pdo_mysql zip curl opcache xml json mbstring sockets exif \
 	&& pecl channel-update pecl.php.net \
     && pecl install igbinary \
     && pecl install redis \
