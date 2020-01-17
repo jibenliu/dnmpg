@@ -10,12 +10,11 @@ RUN apt-get update --fix-missing \
 	&& pecl install mongodb-1.5.4.tgz \
 	&& pecl install memcache-2.2.4.tgz \
 	&& pecl install amqp \
-	&& pecl install swoole \
 	&& pecl install mcrypt \
 	&& pecl install imagick \
 	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 	&& docker-php-ext-install gd \
-	&& docker-php-ext-enable redis swoole mongodb amqp memcache mcrypt imagick \
+	&& docker-php-ext-enable redis mongodb amqp memcache mcrypt imagick \
 	&&  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
