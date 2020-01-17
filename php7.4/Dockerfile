@@ -17,10 +17,10 @@ RUN apt-get update --fix-missing \
     && pecl install mcrypt \
     && docker-php-ext-enable redis xdebug swoole mongodb amqp memcache mcrypt imagick \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-     && php composer-setup.php \
-     && php -r "unlink('composer-setup.php');" \
-     && mv composer.phar /usr/local/bin/composer \
-     && composer config -g repo.packagist composer https://packagist.phpcomposer.com \
+	&& php composer-setup.php \
+	&& php -r "unlink('composer-setup.php');" \
+	&& mv composer.phar /usr/local/bin/composer \
+	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com \
 	&& rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists/* \
 	&& mkdir /var/lib/sessions \
