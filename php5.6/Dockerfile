@@ -4,7 +4,8 @@ WORKDIR /var/www/html
 COPY redis-4.3.0.tgz mongodb-1.5.4.tgz memcache-2.2.4.tgz ./
 
 RUN apt-get update \
-	&& apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12*-dev apt-get update -y docker-php-ext-install pdo_mysql 
+	&& apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12*-dev apt-get update -y docker-php-ext-install pdo_mysql \
+	&& docker-php-ext-install bcmath gd mysqli intl opcache pdo_mysql gd zip curl opcache xml json mbstring sockets exif \
 	&& pecl install redis-4.3.0.tgz \
 	&& pecl install mongodb-1.5.4.tgz \
 	&& pecl install memcache-2.2.4.tgz \
