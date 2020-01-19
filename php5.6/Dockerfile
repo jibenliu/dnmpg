@@ -12,7 +12,6 @@ RUN apt-get update --fix-missing \
 	&& pecl install amqp \
 	&& pecl install imagick \
 	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install gd \
 	&& docker-php-ext-enable redis mongodb amqp memcache imagick \
 	&&  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
