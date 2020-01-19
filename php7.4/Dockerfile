@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-strech
+FROM php:7.4-fpm
 
 MAINTAINER jibenliu jibenliu@126.com
 
