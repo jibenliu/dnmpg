@@ -49,6 +49,16 @@ services:
   #     - "9000:9000"
   #   networks:
   #     - lnmp-networks
+  golang:
+    build: ./golang
+    ports:
+      - "8088:8088"
+    links:
+      - "mysql"
+      - "redis"
+    volumes:
+      - ./goProjects:/go
+    tty: true
   redis:
     image: redis:5.0.7
     container_name: redis
