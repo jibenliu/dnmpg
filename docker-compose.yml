@@ -71,6 +71,7 @@ services:
       - "3306:3306" #mysql
     volumes:
       - ./mysql/data:/var/lib/mysql
+      - ./mysql/data/mysql-files:/var/lib/mysql-files
       - ./mysql/conf:/etc/mysql
       - ./logs/mysql:/var/log/mysql
     command:
