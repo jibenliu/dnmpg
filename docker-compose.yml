@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   nginx:
-    image: nginx:1.17 #最新版本
+    image: nginx:1.17.9-alpine
     container_name: nginx
     ports:
       - "80:80" #nginx
@@ -14,43 +14,8 @@ services:
       - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
     networks:
       - lnmp-networks
-  php7:
-    build:
-      context: ./php7.4
-    container_name: php7-fpm
-    tty: true
-    restart: always
-    privileged: true
-    volumes:
-      - ./www:/var/www/html
-      - ./logs/php:/var/log/php
-      - ./php7.4/etc:/usr/local/etc
-    depends_on:
-      - nginx
-    ports:
-      - "9000:9000"
-    networks:
-      - lnmp-networks
-  # php5:
-  #   build:
-  #     context: ./php5.6
-  #   container_name: php5-fpm
-  #   tty: true
-  #   restart: always
-  #   privileged: true
-  #   volumes:
-  #     - ./www:/var/www/html
-  #     - ./logs/php:/var/log/php
-  #     - ./php5.6/php.ini:/usr/local/etc/php/php.ini
-  #     - ./php5.6/www.conf:/usr/local/etc/php-fpm.d/www.conf
-  #   depends_on:
-  #     - nginx
-  #   ports:
-  #     - "9000:9000"
-  #   networks:
-  #     - lnmp-networks
   golang:
-    build: ./golang
+    image: golang:1.14.0-alpine3.11
     ports:
       - "8088:8088"
     links:
@@ -81,7 +46,7 @@ services:
       - "3306:3306" #mysql
     volumes:
       - ./mysql/data:/var/lib/mysql
-      - ./mysql/data/mysql-files:/var/lib/mysql-files
+      - ./mysql/mysql-files:/var/lib/mysql-files
       - ./mysql/conf:/etc/mysql
       - ./logs/mysql:/var/log/mysql
     command:
@@ -95,45 +60,45 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     networks:
       - lnmp-networks
-  mongodb:
-    image: mongo:4.2.2
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongodb/data:/data
-      - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
-      - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: 123456
-    tty: true
-    restart: always
-    user: mongodb
-    networks:
-      - lnmp-networks
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: rabbitmq
-    ports:
-      - "15672:15672" #管理界面端口
-      - "5672:5672" #服务端端口
-    volumes:
-      - ./rabbitmq/data:/var/lib/rabbitmq
-      - ./rabbitmq/conf:/etc/rabbitmq
-      - ./log/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
-    environment:
-      - RABBITMQ_DEFAULT_USER=root
-      - RABBITMQ_DEFAULT_PASS=123456
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
-    tty: true
-    restart: always
-    user: rabbitmq
-    networks:
-      - lnmp-networks
+  #mongodb:
+  #  image: mongo:4.2.2
+  #  container_name: mongo
+  #  ports:
+  #    - "27017:27017"
+  #  volumes:
+  #    - ./mongodb/data:/data
+  #    - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
+  #    - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+  #  environment:
+  #    MONGO_INITDB_ROOT_USERNAME: admin
+  #    MONGO_INITDB_ROOT_PASSWORD: 123456
+  #  tty: true
+  #  restart: always
+  #  user: mongodb
+  #  networks:
+  #    - lnmp-networks
+  #rabbitmq:
+  #  image: rabbitmq:management-alpine
+  #  container_name: rabbitmq
+  #  ports:
+  #    - "15672:15672" #管理界面端口
+  #    - "5672:5672" #服务端端口
+  #  volumes:
+  #    - ./rabbitmq/data:/var/lib/rabbitmq
+  #    - ./rabbitmq/conf:/etc/rabbitmq
+  #    - ./log/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
+  #  environment:
+  #    - RABBITMQ_DEFAULT_USER=root
+  #    - RABBITMQ_DEFAULT_PASS=123456
+  #  logging:
+  #    driver: "json-file"
+  #    options:
+  #      max-size: "200k"
+  #      max-file: "10"
+  #  tty: true
+  #  restart: always
+  #  user: rabbitmq
+  #  networks:
+  #    - lnmp-networks
 networks:
   lnmp-networks:
