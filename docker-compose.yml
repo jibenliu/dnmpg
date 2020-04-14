@@ -93,7 +93,7 @@ services:
     volumes:
       - ./mongodb/data:/data
       - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
-      - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+      - ./logs/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123456
@@ -111,7 +111,7 @@ services:
     volumes:
       - ./rabbitmq/data:/var/lib/rabbitmq
       - ./rabbitmq/conf:/etc/rabbitmq
-      - ./log/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
+      - ./logs/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
     environment:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=123456
