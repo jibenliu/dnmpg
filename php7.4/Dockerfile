@@ -7,7 +7,8 @@ WORKDIR /var/www/html
 ENV TZ=Asia/Shanghai
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
-    && sed -i 's#http://deb.debian.org#https://mirrors.163.com#g' /etc/apt/sources.list \ 
+    && sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
+    && sed -i 's|security.debian.org/debian-security|mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list \
     && apt-get update --fix-missing \
 	&& apt-get install -y  --no-install-recommends libpng-dev libfreetype6-dev libjpeg62-turbo-dev libxpm-dev libvpx-dev libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev libpcre3 libpcre3-dev openssl libssl-dev \
     && apt-get clean && apt-get autoclean \
@@ -18,12 +19,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && pecl install mongodb \
     && pecl install amqp \
     && pecl install memcache \
-    && pecl install imagick \
     && pecl install mcrypt \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure mongodb --with-php-config=php-config \
     && docker-php-ext-install -j$(nproc) amqp gd bcmath mysqli intl opcache pdo_mysql zip curl opcache xml json mbstring sockets exif gettext pcntl pthread \
-    && docker-php-ext-enable redis xdebug swoole mongodb amqp memcached mcrypt imagick zip\
+    && docker-php-ext-enable redis xdebug swoole mongodb amqp memcached mcrypt zip\
     && docker-php-source delete \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
