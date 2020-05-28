@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && pecl install memcache-4.0.5.2.tgz \
     && pecl install mcrypt-1.0.3.tgz \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-enable redis swoole mongodb memcached mcrypt \
+    && docker-php-ext-enable redis swoole mongodb memcache mcrypt \
     && docker-php-source delete \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
