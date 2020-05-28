@@ -14,7 +14,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && apt-get update --fix-missing \
 	&& apt-get install -y --no-install-recommends libpng-dev libfreetype6-dev libjpeg62-turbo-dev libxpm-dev libvpx-dev libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev libpcre3 libpcre3-dev openssl libssl-dev \
     && apt-get clean && apt-get autoclean \
-    && docker-php-ext-install -j$(nproc) gd bcmath mysqli intl opcache pdo_mysql zip sockets exif gettext pcntl \
+    && docker-php-ext-install -j$(nproc) bcmath gd mysqli intl opcache pdo_mysql zip curl opcache xml json mbstring sockets exif gettext pcntl \
     && pecl install igbinary-3.1.2.tgz \
     && pecl install redis-5.2.2.tgz \
     && pecl install xdebug-2.9.5.tgz \
@@ -24,7 +24,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && pecl install memcache-4.0.5.2.tgz \
     && pecl install mcrypt-1.0.3.tgz \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure mongodb --with-php-config=php-config \
     && docker-php-ext-enable redis swoole mongodb memcached mcrypt \
     && docker-php-source delete \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
