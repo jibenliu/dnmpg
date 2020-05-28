@@ -27,6 +27,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com \
 	&& rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/www/html/* \
 	&& rm -rf ./* \
 	&& mkdir /var/lib/sessions \
     && chmod o=rwx -R /var/lib/sessions
