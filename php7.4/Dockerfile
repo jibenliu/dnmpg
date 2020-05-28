@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && pecl install mcrypt-1.0.3.tgz \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure mongodb --with-php-config=php-config \
-    && docker-php-ext-install -j$(nproc) amqp gd bcmath mysqli intl opcache pdo_mysql zip opcache sockets exif gettext pcntl pthread \
+    && docker-php-ext-install -j$(nproc) gd bcmath mysqli intl opcache pdo_mysql zip sockets exif gettext pcntl \
     && docker-php-ext-enable redis xdebug swoole mongodb amqp memcached mcrypt zip\
     && docker-php-source delete \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
