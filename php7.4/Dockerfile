@@ -13,6 +13,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 	&& apt-get install -y --fix-missing --no-install-recommends libpng-dev libfreetype6-dev libjpeg62-turbo-dev libxpm-dev libvpx-dev libmcrypt-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev libpcre3 libpcre3-dev openssl libssl-dev curl libcurl4-openssl-dev \
     && apt-get clean && apt-get autoclean \
     && docker-php-ext-install -j$(nproc) bcmath iconv gd mysqli intl fileinfo opcache pdo_mysql zip curl opcache xml json mbstring sockets exif gettext pcntl \
+    && pecl channel-update pecl.php.net \
     && pecl install igbinary \
     && pecl install redis \
     && pecl install xdebug \

@@ -14,6 +14,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 	&& apt-get install -y --fix-missing libpng-dev libjpeg-dev libfreetype6-dev libxpm-dev libvpx-dev libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev \
 	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
 	&& docker-php-ext-install -j$(nproc) bcmath iconv gd mysqli mcrypt intl opcache pdo pdo_mysql zip curl opcache xml json mbstring sockets exif \
+	&& pecl channel-update pecl.php.net \
 	&& pecl install redis \
 	&& pecl install mongodb \
 	&& pecl install memcache \
