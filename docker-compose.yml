@@ -14,40 +14,40 @@ services:
       - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
     networks:
       - lnmp-networks
-  # php:
-  #   build:
-  #     context: ./php7.4
-  #   container_name: php7-fpm
-  #   tty: true
-  #   restart: always
-  #   privileged: true
-  #   volumes:
-  #     - ./www:/var/www/html
-  #     - ./logs/php:/var/log/php
-  #     - ./php7.4/etc:/usr/local/etc
-  #   depends_on:
-  #     - nginx
-  #   ports:
-  #     - "9000:9000"
-  #   networks:
-  #     - lnmp-networks
   php:
-    build:
-      context: ./php5.6
-    container_name: php5-fpm
+    # build:
+    #   context: ./php7.4
+    image: jibenliu/php7.4-fpm 
+    container_name: php7-fpm
     tty: true
     restart: always
     privileged: true
     volumes:
       - ./www:/var/www/html
       - ./logs/php:/var/log/php
-      - ./php5.6/etc:/usr/local/etc
+      - ./php7.4/etc:/usr/local/etc
     depends_on:
       - nginx
     ports:
       - "9000:9000"
     networks:
       - lnmp-networks
+  # php:
+  #   image: jibenliu/php5.6-fpm
+  #   container_name: php5-fpm
+  #   tty: true
+  #   restart: always
+  #   privileged: true
+  #   volumes:
+  #     - ./www:/var/www/html
+  #     - ./logs/php:/var/log/php
+  #     - ./php5.6/etc:/usr/local/etc
+  #   depends_on:
+  #     - nginx
+  #   ports:
+  #     - "9000:9000"
+  #   networks:
+  #     - lnmp-networks
   redis:
     image: redis:5.0.7
     container_name: redis
