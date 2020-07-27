@@ -1,4 +1,4 @@
-FROM  php:5.6-fpm
+FROM php:5.6-fpm-alpine
 
 MAINTAINER jibenliu jibenliu@126.com
 
