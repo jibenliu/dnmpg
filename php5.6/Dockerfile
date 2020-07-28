@@ -30,4 +30,4 @@ RUN set -xe \
   && rm -rf /tmp/pear /var/cache/apk/* \
   && apk del .build-deps 
 
-CMD ["php -a"]
+CMD ["php-fpm"]

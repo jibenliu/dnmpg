@@ -44,4 +44,4 @@ RUN set -xe \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* /usr/share/doc/* /usr/share/man/*
 
-CMD ["php -a"]
+CMD ["php-fpm"]
