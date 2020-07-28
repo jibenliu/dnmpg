@@ -1,38 +1,33 @@
-FROM php:5.6-fpm-alpine
+FROM php:5.6-cli-alpine
 
 MAINTAINER jibenliu jibenliu@126.com
 
 WORKDIR /var/www/html
 
-# 设置时区
 ENV TZ=Asia/Shanghai
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
-	&& sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
-	&& sed -i 's|security.debian.org/debian-security|mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list \
-	&& apt-get update --fix-missing \
-	&& apt-get install -y --fix-missing libpng-dev libjpeg-dev libfreetype6-dev libxpm-dev libvpx-dev libmcrypt-dev libcurl4-gnutls-dev pkg-config gcc g++ make autoconf libc-dev libxml2-dev librabbitmq-dev libssh-dev unzip default-mysql-client zlib1g-dev libicu-dev gnupg software-properties-common libzip-dev libonig-dev software-properties-common imagemagick libmagickcore-dev libmagickwand-dev libwebp-dev \
-	&& docker-php-ext-install -j$(nproc) bcmath iconv mysqli mcrypt intl opcache pdo pdo_mysql zip curl opcache xml json mbstring sockets exif \
-	&&	docker-php-source extract \
-	&& cd /usr/src/php/ext/gd \
-	&& docker-php-ext-configure gd --with-webp-dir=/usr/include/webp --with-jpeg-dir=/usr/include --with-png-dir=/usr/include --with-freetype-dir=/usr/include/freetype2 \
-	&& docker-php-ext-install gd \
-	&& pecl channel-update pecl.php.net \
-	&& pecl install redis-4.3.0 \
-	&& pecl install mongodb \
-	&& pecl install memcache-2.2.7 \
-	&& pecl install amqp \
-	&& docker-php-ext-enable redis mongodb amqp memcache \
-	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-	&& php composer-setup.php \
-	&& php -r "unlink('composer-setup.php');" \
-	&& mv composer.phar /usr/local/bin/composer \
-	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com \
-	&& rm -rf /var/cache/apt/* \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/www/html/* \
-	&& rm -rf ./* \
-	&& mkdir /var/lib/sessions \
-    && chmod o=rwx -R /var/lib/sessions
+RUN set -xe \ 
+  && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+  && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+  && apk update && apk upgrade \
+  && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS libtool icu-dev curl-dev freetype-dev imagemagick-dev pcre-dev postgresql-dev libjpeg-turbo-dev libpng-dev libxml2-dev openldap-dev libmcrypt-dev rabbitmq-c rabbitmq-c-dev wget autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c libtool openssl \
+  && apk add bash \
+  && docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-mysqli \
+  && docker-php-ext-configure bcmath \
+  && docker-php-ext-configure ldap --with-ldap \
+  && docker-php-ext-install soap zip curl bcmath exif gd iconv intl mbstring opcache pdo_mysql mysql mysqli pgsql pdo_pgsql ldap mcrypt \
+  && pecl channel-update pecl.php.net \
+  && printf "\n" | pecl install -o -f imagick redis-4.3.0 mongo memcache-2.2.7 amqp igbinary-2.0.8 \
+  && docker-php-ext-enable redis imagick memcache redis mongo igbinary mysqli mcrypt \
+  && docker-php-source delete \
+  && runDeps="$( \
+    scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+      | tr ',' '\n' \
+      | sort -u \
+      | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+  )" \
+  && apk add --no-cache --virtual .php-rundeps $runDeps imagemagick \
+  && rm -rf /tmp/pear /var/cache/apk/* \
+  && apk del .build-deps 
 
-CMD ["php-fpm"]
+CMD ["php -a"]
