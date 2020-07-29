@@ -14,11 +14,11 @@ RUN set -xe \
   && apk add bash \
   && docker-php-source extract \
   && pecl channel-update pecl.php.net \
-  && pecl install $PECL_EXTENSIONS \
+  && pecl install $(echo $PECL_EXTENSIONS | sed -E 's/\-[^ ]+//g') \
   && cd /usr/src/php/ext/sockets \
   && phpize \
   && ./configure --enable-sockets --with-php-config=/usr/local/bin/php-config \
-  && make && make install \
+  && make -j "$(nproc)" && make install \
   && cd /tmp \
   && curl -sSLo event-2.5.6.tgz https://pecl.php.net/get/event-2.5.6.tgz \
   && tar -zxvf event-2.5.6.tgz && cd event-2.5.6 \
@@ -37,13 +37,13 @@ RUN set -xe \
   && mv php-zephir-parser-1.3.3 zephir_parser \
   && docker-php-ext-configure opcache --enable-opcache \
   && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache \
-  && pecl clear-cache \
-  && docker-php-source delete \
   && curl -sSLo /tmp/xhprof.tar.gz https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz \
   && cd /tmp/ && tar xzf xhprof.tar.gz && cd php-xhprof-extension-5.0.1 \
   && phpize && ./configure \
   && make -j "$(nproc)" && make install \
   && docker-php-ext-enable tideways_xhprof \
+  && pecl clear-cache \
+  && docker-php-source delete \
   && curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* /usr/share/doc/* /usr/share/man/*
