@@ -5,7 +5,7 @@ MAINTAINER jibenliu jibenliu@126.com
 WORKDIR /var/www/html
 
 ENV TZ=Asia/Shanghai \
-  PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt"
+  PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt sockets"
 
 RUN set -xe \ 
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
