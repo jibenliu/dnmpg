@@ -15,6 +15,10 @@ RUN set -xe \
   && docker-php-source extract \
   && pecl channel-update pecl.php.net \
   && pecl install $PECL_EXTENSIONS \
+  && curl -sSLo event-2.5.6.tgz https://pecl.php.net/get/event-2.5.6.tgz \
+  && tar -zxvf event-2.5.6.tgz && cd event-2.5.6 \
+  && phpize \
+  && ./configure && make && make install \
   && cd /usr/src/php/ext/ \
   && docker-php-ext-enable $(echo $PECL_EXTENSIONS | sed -E 's/\-[^ ]+//g') \
   && curl -sSLo swoole.tar.gz https://github.com/swoole/swoole-src/archive/v4.4.12.tar.gz \
@@ -27,8 +31,7 @@ RUN set -xe \
   && rm -f zephir_parser.tar.gz \
   && mv php-zephir-parser-1.3.3 zephir_parser \
   && docker-php-ext-configure opcache --enable-opcache \
-  && docker-php-ext-configure event --enable-sockets \
-  && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache event\
+  && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache \
   && pecl clear-cache \
   && docker-php-source delete \
   && curl -sSLo /tmp/xhprof.tar.gz https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz \
