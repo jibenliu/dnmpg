@@ -12,7 +12,7 @@ RUN set -xe \
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   && apk update && apk upgrade \
   && apk add -U --no-cache --virtual .build-deps $PHPIZE_DEPS autoconf g++ file re2c make zlib-dev libtool pcre-dev libxml2-dev bzip2-dev libzip-dev icu-dev gettext-dev imagemagick-dev openldap-dev libpng-dev gmp-dev yaml-dev postgresql-dev libxml2-dev tidyhtml-dev libmemcached-dev libssh2-dev libevent-dev libev-dev lua-dev libmcrypt-dev \
-  && apk add --no-cache icu gettext imagemagick libzip libbz2 libxml2-utils openldap-back-mdb openldap yaml libpq tidyhtml imap-dev libmemcached libssh2 libevent libev lua libmcrypt openssl \
+  && apk add --no-cache icu gettext imagemagick libzip libbz2 libxml2-utils openldap-back-mdb openldap yaml libpq tidyhtml imap-dev libmemcached libssh2 libevent libev lua libmcrypt openssl librabbitmq-dev \
   && apk add bash \
   && docker-php-source extract \
   && pecl channel-update pecl.php.net \
