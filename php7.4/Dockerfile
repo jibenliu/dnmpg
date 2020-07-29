@@ -5,9 +5,6 @@ MAINTAINER jibenliu jibenliu@126.com
 WORKDIR /var/www/html
 
 ENV TZ=Asia/Shanghai \
-  XHPROF_VERSION=5.0.1\
-  ZEPHIR_VERSION=1.3.3 \
-  SWOOLE_VERSION=4.4.12 \
   PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt"
 
 RUN set -xe \ 
@@ -20,21 +17,21 @@ RUN set -xe \
   && pecl install $PECL_EXTENSIONS \
   && cd /usr/src/php/ext/ \
   && docker-php-ext-enable $(echo $PECL_EXTENSIONS | sed -E 's/\-[^ ]+//g') \
-  && curl -sSLo swoole.tar.gz https://github.com/swoole/swoole-src/archive/v$SWOOLE_VERSION.tar.gz \
-  && curl -sSLo swoole_async.tar.gz https://github.com/swoole/ext-async/archive/v$SWOOLE_VERSION.tar.gz \
+  && curl -sSLo swoole.tar.gz https://github.com/swoole/swoole-src/archive/v4.4.12.tar.gz \
+  && curl -sSLo swoole_async.tar.gz https://github.com/swoole/ext-async/archive/v4.4.12.tar.gz \
   && tar xzf swoole.tar.gz && tar xzf swoole_async.tar.gz \
-  && mv swoole-src-$SWOOLE_VERSION swoole && mv ext-async-$SWOOLE_VERSION swoole_async \
+  && mv swoole-src-4.4.12 swoole && mv ext-async-4.4.12 swoole_async \
   && rm -f swoole.tar.gz swoole_async.tar.gz \
-  && curl -sSLo zephir_parser.tar.gz https://github.com/phalcon/php-zephir-parser/archive/v$ZEPHIR_VERSION.tar.gz \
+  && curl -sSLo zephir_parser.tar.gz https://github.com/phalcon/php-zephir-parser/archive/v1.3.3.tar.gz \
   && tar xzf zephir_parser.tar.gz \
   && rm -f zephir_parser.tar.gz \
-  && mv php-zephir-parser-$ZEPHIR_VERSION zephir_parser \
+  && mv php-zephir-parser-1.3.3 zephir_parser \
   && docker-php-ext-configure opcache --enable-opcache \
   && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache \
   && pecl clear-cache \
   && docker-php-source delete \
-  && curl -sSLo /tmp/xhprof.tar.gz https://github.com/tideways/php-xhprof-extension/archive/v$XHPROF_VERSION.tar.gz \
-  && cd /tmp/ && tar xzf xhprof.tar.gz && cd php-xhprof-extension-$XHPROF_VERSION \
+  && curl -sSLo /tmp/xhprof.tar.gz https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz \
+  && cd /tmp/ && tar xzf xhprof.tar.gz && cd php-xhprof-extension-5.0.1 \
   && phpize && ./configure \
   && make -j "$(nproc)" && make install \
   && docker-php-ext-enable tideways_xhprof \
