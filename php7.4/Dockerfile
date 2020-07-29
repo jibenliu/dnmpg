@@ -27,7 +27,8 @@ RUN set -xe \
   && rm -f zephir_parser.tar.gz \
   && mv php-zephir-parser-1.3.3 zephir_parser \
   && docker-php-ext-configure opcache --enable-opcache \
-  && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache \
+  && docker-php-ext-configure event --enable-sockets \
+  && docker-php-ext-install bcmath bz2 calendar exif gd gettext gmp imap intl ldap mysqli pcntl pdo_mysql pgsql pdo_pgsql soap swoole swoole_async sysvshm sysvmsg sysvsem tidy zip zephir_parser opcache event\
   && pecl clear-cache \
   && docker-php-source delete \
   && curl -sSLo /tmp/xhprof.tar.gz https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz \
