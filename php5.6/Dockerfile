@@ -27,6 +27,8 @@ RUN set -xe \
       | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
   )" \
   && apk add --no-cache --virtual .php-rundeps $runDeps imagemagick \
+  && curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+  && composer config -g repo.packagist composer https://packagist.phpcomposer.com \
   && rm -rf /tmp/pear /var/cache/apk/* \
   && apk del .build-deps 
 

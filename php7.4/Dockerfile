@@ -8,6 +8,7 @@ ENV TZ=Asia/Shanghai \
   PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt"
 
 RUN set -xe \ 
+  && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   && apk update && apk upgrade \
   && apk add -U --no-cache --virtual .build-deps $PHPIZE_DEPS autoconf g++ file re2c make zlib-dev libtool pcre-dev bzip2-dev libzip libzip-dev icu icu-dev gettext gettext-dev imagemagick imagemagick-dev openldap openldap-dev openldap-back-mdb libpng-dev gmp-dev yaml yaml-dev postgresql-dev libxml2-dev tidyhtml-dev libmemcached libmemcached-dev libssh2 libssh2-dev libevent libevent-dev libev libev-dev lua-dev openssl libbz2 libxml2-utils libpq tidyhtml imap-dev lua rabbitmq-c rabbitmq-c-dev libmcrypt libmcrypt-dev \
@@ -45,6 +46,7 @@ RUN set -xe \
   && pecl clear-cache \
   && docker-php-source delete \
   && curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+  && composer config -g repo.packagist composer https://packagist.phpcomposer.com \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* /usr/share/doc/* /usr/share/man/*
 
