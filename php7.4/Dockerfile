@@ -5,7 +5,7 @@ MAINTAINER jibenliu jibenliu@126.com
 WORKDIR /var/www/html
 
 ENV TZ=Asia/Shanghai \
-  PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt sockets"
+  PECL_EXTENSIONS="apcu ast ds ev hrtime igbinary imagick lzf lua mongodb msgpack oauth pcov psr redis uuid xdebug xlswriter yaf yaml amqp memcache mcrypt"
 
 RUN set -xe \ 
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
@@ -15,11 +15,12 @@ RUN set -xe \
   && docker-php-source extract \
   && pecl channel-update pecl.php.net \
   && pecl install $PECL_EXTENSIONS \
+  && docker-php-ext-configure sockets --enable-sockets \
   && cd /tmp \
   && curl -sSLo event-2.5.6.tgz https://pecl.php.net/get/event-2.5.6.tgz \
   && tar -zxvf event-2.5.6.tgz && cd event-2.5.6 \
   && phpize \
-  && ./configure && make -j "$(nproc)" && make install \
+  && ./configure --with-php-config && make -j "$(nproc)" && make install \
   && cd /usr/src/php/ext/ \
   && docker-php-ext-enable $(echo $PECL_EXTENSIONS | sed -E 's/\-[^ ]+//g') \
   && curl -sSLo swoole.tar.gz https://github.com/swoole/swoole-src/archive/v4.4.12.tar.gz \
