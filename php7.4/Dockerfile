@@ -15,10 +15,11 @@ RUN set -xe \
   && docker-php-source extract \
   && pecl channel-update pecl.php.net \
   && pecl install $PECL_EXTENSIONS \
+  && cd /tmp \
   && curl -sSLo event-2.5.6.tgz https://pecl.php.net/get/event-2.5.6.tgz \
   && tar -zxvf event-2.5.6.tgz && cd event-2.5.6 \
   && phpize \
-  && ./configure && make && make install \
+  && ./configure && make -j "$(nproc)" && make install \
   && cd /usr/src/php/ext/ \
   && docker-php-ext-enable $(echo $PECL_EXTENSIONS | sed -E 's/\-[^ ]+//g') \
   && curl -sSLo swoole.tar.gz https://github.com/swoole/swoole-src/archive/v4.4.12.tar.gz \
