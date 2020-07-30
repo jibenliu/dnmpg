@@ -10,8 +10,8 @@ RUN set -xe \
   && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   && apk update && apk upgrade \
-  && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS libtool icu-dev curl-dev freetype-dev imagemagick-dev pcre-dev postgresql-dev libjpeg-turbo-dev libpng-dev libxml2-dev openldap-dev libmcrypt-dev rabbitmq-c rabbitmq-c-dev wget autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c libtool openssl \
-  && apk add bash \
+  && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev curl-dev freetype-dev imagemagick-dev pcre-dev postgresql-dev libjpeg-turbo-dev libpng-dev libxml2-dev openldap-dev libmcrypt-dev rabbitmq-c-dev  dpkg-dev libc-dev \
+  && apk add --no-cache libtool rabbitmq-c wget autoconf dpkg file g++ gcc make pkgconf re2c libtool openssl bash \
   && docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-mysqli \
   && docker-php-ext-configure bcmath \
   && docker-php-ext-configure ldap --with-ldap \
