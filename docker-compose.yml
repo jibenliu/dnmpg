@@ -7,17 +7,19 @@ services:
       - "80:80" #nginx
     restart: always
     tty: true
+    privileged: true
     volumes:
       - ./www:/var/www/html
       - ./logs/nginx:/var/log/nginx
       - ./nginx/conf:/etc/nginx
       - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
     networks:
-      - lnmp-networks
+      lnmp-networks:
+        ipv4_address: 172.19.0.2
   php:
-    # build:
+    # build:a
     #   context: ./php7.4
-    image: jibenliu/php7.4-fpm 
+    image: jibenliu/php7.4-fpm
     container_name: php7-fpm
     tty: true
     restart: always
@@ -31,7 +33,8 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - lnmp-networks
+      lnmp-networks:
+        ipv4_address: 172.19.0.3
   # php:
   #   image: jibenliu/php5.6-fpm
   #   container_name: php5-fpm
@@ -67,6 +70,7 @@ services:
     networks:
       - lnmp-networks
   mysql:
+    # image: mysql:5.7
     image: mysql:8.0
     container_name: mysql
     tty: true
@@ -92,49 +96,50 @@ services:
           cpus: '1'
           memory: 1G
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+      - "TZ=Asia/Shanghai"
+      - "MYSQL_ROOT_PASSWORD=123456"
     networks:
       - lnmp-networks
-  mongodb:
-    image: mongo:4.2.2
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongodb/data:/data
-      - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
-      - ./logs/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: 123456
-    tty: true
-    restart: always
-    user: mongodb
-    networks:
-      - lnmp-networks
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: rabbitmq
-    ports:
-      - "15672:15672" #管理界面端口
-      - "5672:5672" #服务端端口
-    volumes:
-      - ./rabbitmq/data:/var/lib/rabbitmq
-      - ./rabbitmq/conf:/etc/rabbitmq
-      - ./logs/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
-    environment:
-      - RABBITMQ_DEFAULT_USER=root
-      - RABBITMQ_DEFAULT_PASS=123456
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
-    tty: true
-    restart: always
-    user: rabbitmq
-    networks:
-      - lnmp-networks
+  # mongodb:
+  #   image: mongo:4.2.2
+  #   container_name: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./mongodb/data:/data
+  #     - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
+  #     - ./logs/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: 123456
+  #   tty: true
+  #   restart: always
+  #   user: mongodb
+  #   networks:
+  #     - lnmp-networks
+  # rabbitmq:
+  #   image: rabbitmq:management-alpine
+  #   container_name: rabbitmq
+  #   ports:
+  #     - "15672:15672" #管理界面端口
+  #     - "5672:5672" #服务端端口
+  #   volumes:
+  #     - ./rabbitmq/data:/var/lib/rabbitmq
+  #     - ./rabbitmq/conf:/etc/rabbitmq
+  #     - ./logs/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=root
+  #     - RABBITMQ_DEFAULT_PASS=123456
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "200k"
+  #       max-file: "10"
+  #   tty: true
+  #   restart: always
+  #   user: rabbitmq
+  #   networks:
+  #     - lnmp-networks
   # memcached:
   #   image: memcached
   #   ports:
@@ -145,3 +150,4 @@ services:
   #     - lnmp-networks
 networks:
   lnmp-networks:
+    - subnet: 172.19.0.0/16
