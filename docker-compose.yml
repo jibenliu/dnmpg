@@ -1,29 +1,29 @@
 version: '3.3'
 services:
-  nginx:
-    image: nginx:1.17.9-alpine
-    container_name: nginx
-    ports:
-      - "80:80" #nginx
-    restart: always
-    tty: true
-    volumes:
-      - ./www:/var/www/html
-      - ./logs/nginx:/var/log/nginx
-      - ./nginx/conf:/etc/nginx
-      - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
-    networks:
-      - lnmp-networks
-  golang:
-    image: golang:1.14.0-alpine3.11
-    ports:
-      - "8088:8088"
-    links:
-      - "mysql"
-      - "redis"
-    volumes:
-      - ./www:/go
-    tty: true
+  # nginx:
+  #   image: nginx:1.17.9-alpine
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80" #nginx
+  #   restart: always
+  #   tty: true
+  #   volumes:
+  #     - ./www:/var/www/html
+  #     - ./logs/nginx:/var/log/nginx
+  #     - ./nginx/conf:/etc/nginx
+  #     - ./nginx/etc/letsencrypt:/etc/letsencrypt #ssl证书目录
+  #   networks:
+  #     - lnmp-networks
+  # golang:
+  #   image: golang:1.14.0-alpine3.11
+  #   ports:
+  #     - "8088:8088"
+  #   links:
+  #     - "mysql"
+  #     - "redis"
+  #   volumes:
+  #     - ./www:/go
+  #   tty: true
   redis:
     image: redis:5.0.7
     container_name: redis
@@ -55,50 +55,76 @@ services:
       --collation-server=utf8mb4_general_ci
       --explicit_defaults_for_timestamp=true
       --lower_case_table_names=1
-      --max_allowed_packet=128M; 
+      --max_allowed_packet=128M;
     environment:
       MYSQL_ROOT_PASSWORD: 123456
     networks:
       - lnmp-networks
-  #mongodb:
-  #  image: mongo:4.2.2
-  #  container_name: mongo
-  #  ports:
-  #    - "27017:27017"
-  #  volumes:
-  #    - ./mongodb/data:/data
-  #    - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
-  #    - ./log/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
-  #  environment:
-  #    MONGO_INITDB_ROOT_USERNAME: admin
-  #    MONGO_INITDB_ROOT_PASSWORD: 123456
-  #  tty: true
-  #  restart: always
-  #  user: mongodb
-  #  networks:
-  #    - lnmp-networks
-  #rabbitmq:
-  #  image: rabbitmq:management-alpine
-  #  container_name: rabbitmq
-  #  ports:
-  #    - "15672:15672" #管理界面端口
-  #    - "5672:5672" #服务端端口
-  #  volumes:
-  #    - ./rabbitmq/data:/var/lib/rabbitmq
-  #    - ./rabbitmq/conf:/etc/rabbitmq
-  #    - ./log/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
-  #  environment:
-  #    - RABBITMQ_DEFAULT_USER=root
-  #    - RABBITMQ_DEFAULT_PASS=123456
-  #  logging:
-  #    driver: "json-file"
-  #    options:
-  #      max-size: "200k"
-  #      max-file: "10"
-  #  tty: true
-  #  restart: always
-  #  user: rabbitmq
-  #  networks:
-  #    - lnmp-networks
+  pgsql:
+    container_name: pgsql
+    restart: always
+    image: postgres:latest
+    privileged: true
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 123456
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgreSQL/data:/var/lib/postgresql/data/pgdata
+    networks:
+      - lnmp-networks
+  mongodb:
+    image: mongo:4.2.2
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb/data:/data
+      - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
+      - ./logs/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    tty: true
+    restart: always
+    user: mongodb
+    networks:
+      - lnmp-networks
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq
+    ports:
+      - "15672:15672" #管理界面端口
+      - "5672:5672" #服务端端口
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+      - ./logs/rabbitmq/rabbitmq.log:/var/log/rabbitmq/rabbitmq.log:rw
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=123456
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    tty: true
+    restart: always
+    user: rabbitmq
+    networks:
+      - lnmp-networks
+  zookeeper:
+    image: zookeeper
+    restart: always
+    container_name: zookeeper
+    volumes:
+      - ./zookeeper/config:/conf
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+    networks:
+      - lnmp-networks
 networks:
   lnmp-networks:
