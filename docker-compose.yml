@@ -35,6 +35,7 @@ services:
       - ./redis/redis.conf:/etc/redis/redis.conf
       - ./redis/data:/var/lib/redis
       - ./logs/redis:/var/log/redis
+    command: redis-server --port 6379 --requirepass pwd123456  --appendonly yes
     networks:
       - lnmp-networks
   mysql:
