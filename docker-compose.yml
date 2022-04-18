@@ -30,5 +30,44 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     networks:
       - lnmp-networks
+  mongodb:
+    image: mongo:4.2.2
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb/data:/data
+      - ./mongodb/conf/mongod.conf.orig:/etc/mongod.conf #默认配置文件
+      - ./logs/mongodb/mongodb.log:/var/log/mongodb/mongodb.log:rw
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    tty: true
+    restart: always
+    user: mongodb
+    networks:
+     - lnmp-networks
+  activemq:
+    container_name: activeMQ
+    image: "webcenter/activemq"
+    restart: always
+    volumes:
+      - ./activeMQ/data:/data/activemq
+      - ./logs/activeMQ:/var/log/activemq
+    ports: 
+      - 8161:8161
+      - 61616:61616
+      - 5672:5672
+      - 61613:61613
+      - 1883:1883
+      - 61614:61614
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=admin
+      - ACTIVEMQ_ADMIN_PASSWORD=admin
+      - ACTIVEMQ_CONFIG_MINMEMORY=512
+      - ACTIVEMQ_CONFIG_MAXMEMORY=2048
+      - TZ=Asia/Shanghai
+    networks: 
+        - lnmp-networks
 networks:
   lnmp-networks: null
